@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2013-04-29T22:10:22Z" product-name="pxa_mynewsdesk">
+		<header/>
+		<body>
+
+			<trans-unit id="hash.description">
+				<source>News hash</source>
+			</trans-unit>
+			<trans-unit id="newstable.description">
+				<source>News table</source>
+			</trans-unit>
+			<trans-unit id="newsid.description">
+				<source>News uid</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

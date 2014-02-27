@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2013-04-29T22:10:22Z" product-name="pxa_mynewsdesk">
+		<header/>
+		<body>
+
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importlog">
+				<source>Import Log</source>
+			</trans-unit>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importlog.hash">
+				<source>Hash</source>
+			</trans-unit>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importlog.newstable">
+				<source>Newstable</source>
+			</trans-unit>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importlog.newsid">
+				<source>Newsid</source>
+			</trans-unit>
+
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig">
+				<source>Import Config</source>
+			</trans-unit>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.title">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.description">
+				<source>Description</source>
+			</trans-unit>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.newpid">
+				<source>Newpid</source>
+			</trans-unit>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.newstable">
+				<source>Newstable</source>
+			</trans-unit>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.mapping">
+				<source>Mapping</source>
+			</trans-unit>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.newsurl">
+				<source>Newsurl</source>
+			</trans-unit>
+
+		</body>
+	</file>
+</xliff>
