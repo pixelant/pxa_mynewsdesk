@@ -39,6 +39,10 @@
 				<source>Newsurl</source>
 			</trans-unit>
 
+			<trans-unit id="schedulertx_pxamynewsdesk_title">
+				<source>Import news items from Mynewsdesk 2</source>
+			</trans-unit>
+
 		</body>
 	</file>
 </xliff>

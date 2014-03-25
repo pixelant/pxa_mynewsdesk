@@ -21,14 +21,12 @@
 			<label index="tx_pxamynewsdesk_domain_model_importconfig.newsurl">News url</label>
 			<label index="tx_pxamynewsdesk_domain_model_importconfig.newscat">News categories</label>
 			
-			<label index="scheduler.tx_pxamynewsdesk_title">Import news items from Mynewsdesk</label>
+			<label index="schedulertx_pxamynewsdesk_title">Import news items from Mynewsdesk</label>
 			<label index="scheduler.tx_pxamynewsdesk_description">Import news items from Mynewsdesk</label>
 			<label index="scheduler.tx_pxamynewsdesk_configuration">Configuration records</label>
 
 			<label index="scheduler.tx_pxamynewsdesk_cleanertitle">Clear log records from Mynewsdesk</label>
 			<label index="scheduler.tx_pxamynewsdesk_cleanerdescription">Clear log records refecencing to deleted news items</label>
-
-			<label index=""></label>
 		</languageKey>
 	</data>
 </T3locallang>
