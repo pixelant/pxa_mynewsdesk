@@ -24,7 +24,7 @@
 ***************************************************************/
 
 
-namespace Pixalant\PxaMynewsdesk\Scheduler\Task ;
+namespace Pixalant\PxaMynewsdesk\Scheduler ;
 
 
 class ImportAdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface

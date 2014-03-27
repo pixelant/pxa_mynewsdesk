@@ -30,7 +30,7 @@
  * @version $Id:$
  */
 
-namespace Pixelant\PxaMynewsdesk\Scheduler\Task ;
+namespace Pixelant\PxaMynewsdesk\Scheduler ;
 
 //require_once(t3lib_extMgm::extPath('pxa_mynewsdesk') . 'Classes/Domain/Repository/ImportConfigRepository.php');
 //require_once(t3lib_extMgm::extPath('pxa_mynewsdesk') . 'Classes/Domain/Repository/ImportLogRepository.php');
