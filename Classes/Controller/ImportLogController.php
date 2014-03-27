@@ -30,7 +30,10 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class Tx_PxaMynewsdesk_Controller_ImportLogController extends Tx_Extbase_MVC_Controller_ActionController {
+
+namespace TYPO3\PxaMynewsdesk\Controller ;
+
+class Tx_PxaMynewsdesk_Controller_ImportLogController extends \TYPO3\CMS\Extbase\MVC\Controller\ActionController {
 
 	/**
 	 * action list
