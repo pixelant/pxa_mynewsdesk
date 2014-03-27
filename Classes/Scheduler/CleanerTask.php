@@ -30,7 +30,7 @@
  * @version $Id:$
  */
 
-namespace TYPO3\PxaMynewsdesk\Task ;
+namespace Pixelant\PxaMynewsdesk\Scheduler\Task ;
 
 class CleanerTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 {

@@ -24,7 +24,8 @@
 ***************************************************************/
 
 
-namespace TYPO3\PxaMynewsdesk\Task ;
+namespace Pixalant\PxaMynewsdesk\Scheduler\Task ;
+
 
 class ImportAdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface
 {
@@ -63,12 +64,12 @@ class ImportAdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalF
         return $additionalFields;
     }
 
-    public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $parentObject) {
+    public function validateAdditionalFields(array &$submittedData, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject) {
         $submittedData['pxamynewsdeskconfiguration'] = trim(implode(",", $submittedData['pxamynewsdeskconfiguration']));
         return true;
     }
 
-    public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
+    public function saveAdditionalFields(array $submittedData, \TYPO3\CMS\Scheduler\Task\AbstractTask $task) {
         $task->pxamynewsdeskconfiguration = $submittedData['pxamynewsdeskconfiguration'];
     }
 }

@@ -31,7 +31,7 @@
  *
  */
 
-namespace TYPO3\PxaMynewsdesk\Controller ;
+namespace Pixelant\PxaMynewsdesk\Controller ;
 
 class ImportConfigController extends \TYPO3\CMS\Extbase\MVC\Controller\ActionController {
 

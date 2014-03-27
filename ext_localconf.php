@@ -28,7 +28,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 
 
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['TYPO3\\PxaMynewsdesk\\Task\\ImportTask'] = array (
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['Pixalant\\PxaMynewsdesk\\Scheduler\\Task\\ImportTask'] = array (
 	'extension'        => $_EXTKEY,
 	'title'            => 'tx_pxamynewsdesk_title',
 	'description'      => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xml:scheduler.tx_pxamynewsdesk_description',
@@ -36,7 +36,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['TYPO3\\PxaMynew
 );
 
 
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['TYPO3\\PxaMynewsdesk\\Task\\CleanerTask'] = array (
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['Pixalant\\PxaMynewsdesk\\Scheduler\\Task\\CleanerTask'] = array (
 	'extension'        => $_EXTKEY,
 	'title'            => 'tx_pxamynewsdesk_cleanertitle',
 	'description'      => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xml:scheduler.tx_pxamynewsdesk_cleanerdescription'
