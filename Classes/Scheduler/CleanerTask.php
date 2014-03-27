@@ -30,7 +30,9 @@
  * @version $Id:$
  */
 
-class tx_pxamynewsdesk_cleanertask extends tx_scheduler_Task
+namespace TYPO3\PxaMynewsdesk\Task ;
+
+class CleanerTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 {
 
 	/**

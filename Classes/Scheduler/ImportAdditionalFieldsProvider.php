@@ -23,9 +23,13 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-class tx_pxamynewsdesk_importadditionalfieldsprovider implements tx_scheduler_AdditionalFieldProvider
+namespace TYPO3\PxaMynewsdesk\Task ;
+
+class ImportAdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface
 {
-    public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $parentObject) {
+    public function getAdditionalFields(array &$taskInfo, $task, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject) {
+
+        die ('ImportAdditionalFieldsProvider');
         
         $pxamynewsdeskImportConfig = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_pxamynewsdesk_domain_model_importconfig', 'hidden=0
                 AND (starttime=0 OR starttime<=' . $GLOBALS['EXEC_TIME'] . ')');

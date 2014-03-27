@@ -30,13 +30,17 @@
  * @version $Id:$
  */
 
-require_once(t3lib_extMgm::extPath('pxa_mynewsdesk') . 'Classes/Domain/Repository/ImportConfigRepository.php');
-require_once(t3lib_extMgm::extPath('pxa_mynewsdesk') . 'Classes/Domain/Repository/ImportLogRepository.php');
-require_once(t3lib_extMgm::extPath('pxa_mynewsdesk') . 'Classes/Domain/Model/ImportLog.php');
-require_once(t3lib_extMgm::extPath('pxa_mynewsdesk') . 'Classes/Domain/Model/ImportConfig.php');
+namespace TYPO3\PxaMynewsdesk\Task ;
 
-class tx_pxamynewsdesk_importtask extends tx_scheduler_Task
+//require_once(t3lib_extMgm::extPath('pxa_mynewsdesk') . 'Classes/Domain/Repository/ImportConfigRepository.php');
+//require_once(t3lib_extMgm::extPath('pxa_mynewsdesk') . 'Classes/Domain/Repository/ImportLogRepository.php');
+//require_once(t3lib_extMgm::extPath('pxa_mynewsdesk') . 'Classes/Domain/Model/ImportLog.php');
+//require_once(t3lib_extMgm::extPath('pxa_mynewsdesk') . 'Classes/Domain/Model/ImportConfig.php');
+
+
+class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 {
+
 
 
 	/**
