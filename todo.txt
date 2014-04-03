@@ -1,5 +1,5 @@
 1. Add news ext functionality
-2. Make 'tx_pxamynewsdesk_domain_model_importconfig'.'newscat' tca category selector from available categories tt_news/news ext
+2. Make 'tx_pxamynewsdesk_domain_model_importconfig'.'newscat' tca category selector from available categories tx_news_domain_model_news/news ext
 3. Test repository sql injection and optimise sqls
 4. Change 'tx_pxamynewsdesk_domain_model_importconfig' and 'tx_pxamynewsdesk_domain_model_importlog' icons
 5. Add debug log, error log and report

@@ -24,7 +24,7 @@
 ***************************************************************/
 
 
-namespace Pixalant\PxaMynewsdesk\Scheduler ;
+namespace Pixelant\PxaMynewsdesk\Scheduler ;
 
 
 class ImportAdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface
@@ -45,6 +45,7 @@ class ImportAdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalF
             } else {
                 $taskInfo['pxamynewsdeskconfiguration'] = '';
             }
+            var_dump($taskInfo['pxamynewsdeskconfiguration']);
         }
 
         $cfgValues =  explode(",", $taskInfo['pxamynewsdeskconfiguration']);

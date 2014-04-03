@@ -1,4 +1,7 @@
 <?php
+
+namespace Pixelant\PxaMynewsdesk\Domain\Repository ;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,7 +29,7 @@
 /**
  * A repository for import config
  */
-class Tx_PxaMynewsdesk_Domain_Repository_ImportConfigRepository extends Tx_Extbase_Persistence_Repository {
+class ImportConfigRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
   public function findAllByUids($uids) {
 
     if ($uids) {

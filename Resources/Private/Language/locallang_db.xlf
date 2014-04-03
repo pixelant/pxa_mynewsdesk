@@ -39,8 +39,26 @@
 				<source>Newsurl</source>
 			</trans-unit>
 
-			<trans-unit id="schedulertx_pxamynewsdesk_title">
-				<source>Import news items from Mynewsdesk 2</source>
+
+
+			<trans-unit id="tx_pxamynewsdesk_scheduler_importtask.title">
+				<source>Import news items from Mynewsdesk</source>
+			</trans-unit>
+
+			<trans-unit id="tx_pxamynewsdesk_scheduler_importtask.description">
+				<source>Import news items from Mynewsdesk</source>
+			</trans-unit>
+
+			<trans-unit id="tx_pxamynewsdesk_scheduler_importtask.configuration">
+				<source>Configuration records</source>
+			</trans-unit>
+
+			<trans-unit id="tx_pxamynewsdesk_scheduler_importtask_cleanertask.title">
+				<source>Clear log records from Mynewsdesk</source>
+			</trans-unit>
+
+			<trans-unit id="tx_pxamynewsdesk_scheduler_cleanertask.description">
+				<source>Clear log records refecencing to deleted news items</source>
 			</trans-unit>
 
 		</body>

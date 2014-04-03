@@ -42,9 +42,9 @@ class CleanerTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 	 */
 	public function execute()
 	{
-		// delete records from `tx_pxamynewsdesk_domain_model_importlog` for relating missing/deleted tt_news records
-		if(t3lib_extMgm::isLoaded('tt_news')) {
-			$query = 'SELECT t1.uid FROM `tx_pxamynewsdesk_domain_model_importlog` t1 JOIN `tt_news` t2 ON  t1.newsid = t2.uid WHERE t1.newspid = t2.pid';
+		// delete records from `tx_pxamynewsdesk_domain_model_importlog` for relating missing/deleted tx_news_domain_model_news records
+		if(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('news')) {
+			$query = 'SELECT t1.uid FROM `tx_pxamynewsdesk_domain_model_importlog` t1 JOIN `tx_news_domain_model_news` t2 ON  t1.newsid = t2.uid WHERE t1.newspid = t2.pid';
 			$res = $GLOBALS['TYPO3_DB']->sql_query($query);
 			$uids = array();		
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){

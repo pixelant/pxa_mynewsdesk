@@ -23,6 +23,8 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+namespace Pixelant\PxaMynewsdesk\Domain\Model ;
+
 /**
  *
  *
@@ -30,7 +32,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class Tx_PxaMynewsdesk_Domain_Model_ImportConfig extends Tx_Extbase_DomainObject_AbstractEntity {
+class ImportConfig extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	/**
 	 * Title

@@ -33,7 +33,7 @@
 
 namespace Pixelant\PxaMynewsdesk\Controller ;
 
-class Tx_PxaMynewsdesk_Controller_ImportLogController extends \TYPO3\CMS\Extbase\MVC\Controller\ActionController {
+class ImportLogController extends \TYPO3\CMS\Extbase\MVC\Controller\ActionController {
 
 	/**
 	 * action list

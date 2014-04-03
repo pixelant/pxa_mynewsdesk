@@ -6,6 +6,7 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
+            <label index="scheduler.title">Import news items from Mynewsdesk</label>
 			<label index="tx_pxamynewsdesk_domain_model_importlog">Import Log</label>
 			<label index="tx_pxamynewsdesk_domain_model_importlog.hash">Hash</label>
 			<label index="tx_pxamynewsdesk_domain_model_importlog.newstable">News table</label>
@@ -21,7 +22,8 @@
 			<label index="tx_pxamynewsdesk_domain_model_importconfig.newsurl">News url</label>
 			<label index="tx_pxamynewsdesk_domain_model_importconfig.newscat">News categories</label>
 			
-			<label index="schedulertx_pxamynewsdesk_title">Import news items from Mynewsdesk</label>
+
+			<label index="tx_pxamynewsdesk_scheduler.title">Import news items from Mynewsdesk</label>
 			<label index="scheduler.tx_pxamynewsdesk_description">Import news items from Mynewsdesk</label>
 			<label index="scheduler.tx_pxamynewsdesk_configuration">Configuration records</label>
 

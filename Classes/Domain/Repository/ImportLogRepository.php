@@ -1,4 +1,7 @@
 <?php
+
+namespace Pixelant\PxaMynewsdesk\Domain\Repository ;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,19 +29,20 @@
 /**
  * A repository for import config
  */
-class Tx_PxaMynewsdesk_Domain_Repository_ImportLogRepository extends Tx_Extbase_Persistence_Repository {
+class ImportLogRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
   public function countByStringProperties($columns, $values, $pid) {
     $sql = array();
     foreach($columns as $key => $column) {
       $sql[] = "`$column` = '$values[$key]'";
     }
     $where = implode(" AND ", $sql);
+
     if (trim($where)) {
       $query = $this->createQuery();
       $query->statement('SELECT * FROM `tx_pxamynewsdesk_domain_model_importlog` WHERE ' . $where . '  AND newspid = ' . intval($pid));
       return count($query->execute()->toArray());
     } else {
-      return flase;
+      return false;
     }
   }
   
