@@ -122,30 +122,10 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
        										'tstamp' => mktime()
 										);
 
-										//if(is_array($categories)) $insertArray["category"] = count($categories);
 
-
-                                        //$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_news_domain_model_news', 'uid=45');
-                                        //$GLOBALS['TYPO3_DB']->debugOutput = true;
-                                        //$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_news_domain_model_news', 'datetime='.$insertArray["datetime"]);
-                                        //var_dump($GLOBALS['TYPO3_DB']->debug_lastBuiltQuery);
-                                        //$row=mysql_fetch_assoc($res);
-
-
-
-
-
-                                        //$TYPO3_CONF_VARS['FE']['debug'] = '1';
-
-                                        //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($res);
-
-                                        //var_dump($row);
-                                        //die();
+                                        $GLOBALS['TYPO3_DB']->debugOutput = true;
 
 										$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news', $insertArray);
-
-                                        //var_dump($GLOBALS['TYPO3_DB']->debug_lastBuiltQuery);
-                                        //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($GLOBALS['TYPO3_DB']->debug_lastBuiltQuery);
 
 
 										$newsId = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -176,7 +156,6 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 								$this->importLogRepository->add($newImportLog);
 								$this->persistenceManager->persistAll();
 							}
-#							echo($newsId);
 						}
 					}
 

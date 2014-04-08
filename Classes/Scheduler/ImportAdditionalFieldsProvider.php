@@ -45,7 +45,6 @@ class ImportAdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalF
             } else {
                 $taskInfo['pxamynewsdeskconfiguration'] = '';
             }
-            var_dump($taskInfo['pxamynewsdeskconfiguration']);
         }
 
         $cfgValues =  explode(",", $taskInfo['pxamynewsdeskconfiguration']);

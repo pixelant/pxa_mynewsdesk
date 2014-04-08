@@ -37,8 +37,6 @@ class ImportLogRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     }
     $where = implode(" AND ", $sql);
 
-   //var_dump($where);
-
     if (trim($where)) {
       $query = $this->createQuery();
       $query->statement('SELECT * FROM `tx_pxamynewsdesk_domain_model_importlog` WHERE ' . $where . '  AND newspid = ' . intval($pid));
