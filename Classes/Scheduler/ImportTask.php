@@ -103,7 +103,7 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 
 						$hash = \TYPO3\CMS\Core\Utility\GeneralUtility::hmac($newsItem["title"].$newsItem["pubDate"]);
 						$logCount = $this->importLogRepository->countByStringProperties(array("hash", "newstable"), array($hash, $conf["news_table"]), intval($conf["news_pid"]));
-						if($logCount) {
+						if(!$logCount) {
 
 							switch ($conf["news_table"]) {
 								case 'tx_news_domain_model_news':
@@ -124,6 +124,23 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 
 										//if(is_array($categories)) $insertArray["category"] = count($categories);
 
+
+                                        //$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_news_domain_model_news', 'uid=45');
+                                        //$GLOBALS['TYPO3_DB']->debugOutput = true;
+                                        //$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_news_domain_model_news', 'datetime='.$insertArray["datetime"]);
+                                        //var_dump($GLOBALS['TYPO3_DB']->debug_lastBuiltQuery);
+                                        //$row=mysql_fetch_assoc($res);
+
+
+
+
+
+                                        //$TYPO3_CONF_VARS['FE']['debug'] = '1';
+
+                                        //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($res);
+
+                                        //var_dump($row);
+                                        //die();
 
 										$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news', $insertArray);
 
@@ -234,7 +251,8 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
                 'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
                 'description' => $node->getElementsByTagName('description')->item(0)->nodeValue,
                 'link' => $node->getElementsByTagName('link')->item(0)->nodeValue,
-                'date' => $node->getElementsByTagName('pubDate')->item(0)->nodeValue
+                'date' => $node->getElementsByTagName('pubDate')->item(0)->nodeValue,
+                'dc:creator' => $node->getElementsByTagName('dc:creator')->item(0)->nodeValue
             );
             array_push($xml, $rss);
         } //endforeach element ids
