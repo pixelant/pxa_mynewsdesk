@@ -91,9 +91,13 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 			$xmlContent = "";
 			if(trim($conf["news_url"])) $xmlContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(trim($conf["news_url"]));
 			if($xmlContent) {
-				$newsItems = array();
+				//  $newsItems = array();
 
-				$this->getArrValuesByKey(\TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($xmlContent), "item", &$newsItems);
+				//$this->getArrValuesByKey(\TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($xmlContent), "item", &$newsItems);
+                $newsItems = $this->checkCache(array('url' => 'http://www.mynewsdesk.com/no/rss/source/47871/pressrelease'));
+
+
+
 				if(is_array($newsItems)) {
 					foreach($newsItems as $newsItem ) {
 
@@ -110,7 +114,7 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 		    								'title' => $newsItem["title"],
 		    								'teaser' => $newsItem["description"],
 		    								'bodytext' => $newsItem["description"],
-		    								'datetime' => strtotime($newsItem["pubDate"]),
+		    								'datetime' => strtotime($newsItem["date"]),
 		    								//'ext_url' => $newsItem["link"],
 		    								'author' => $newsItem["dc:creator"],
 		    								'type' => 2, // external url
@@ -138,7 +142,7 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 												$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news_category_mm', $insertArray);
 											}
 										}
-									}	
+									}
 									break;
 								default:
 									// import into news ext will be here
@@ -154,11 +158,11 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 								$newImportLog->setNewsPid($conf["news_pid"]);
 								$this->importLogRepository->add($newImportLog);
 								$this->persistenceManager->persistAll();
-							}									
+							}
 #							echo($newsId);
 						}
 					}
-					 
+
 				}
 			}
 		}
@@ -198,6 +202,47 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
       	return $config;  
     }
 
+    public function checkCache($data=array())
+    {
+        foreach ($data as $service => $feed)
+        {
+            $path = '/tmp/' . $service . '.cache';
+            if ((!file_exists($path) || time() - filemtime($path) > 60) && $cache = fopen($path, 'w+'))
+            {
+                $rss_contents = $this->getFeed($feed);
+                fwrite($cache, $rss_contents);
+                fclose($cache);
+                return unserialize($rss_contents);
+            }
+            else
+            {
+                $cache = fopen($path, 'r');
+                return unserialize(file_get_contents($path));
+                fclose($cache);
+            }
+        }
+    }
+
+    protected function getFeed($url)
+    {
+        $xml = array();
+        $doc = new \DOMDocument();
+        $doc->load($url);
+        foreach ($doc->getElementsByTagName('item') as $node)
+        {
+            $rss = array (
+                'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
+                'description' => $node->getElementsByTagName('description')->item(0)->nodeValue,
+                'link' => $node->getElementsByTagName('link')->item(0)->nodeValue,
+                'date' => $node->getElementsByTagName('pubDate')->item(0)->nodeValue
+            );
+            array_push($xml, $rss);
+        } //endforeach element ids
+        return serialize($xml);
+    }
+
 }
+
+
 
 ?>
