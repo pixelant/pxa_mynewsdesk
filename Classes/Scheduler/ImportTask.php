@@ -94,7 +94,7 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 				//  $newsItems = array();
 
 				//$this->getArrValuesByKey(\TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($xmlContent), "item", &$newsItems);
-                $newsItems = $this->checkCache(array('url' => 'http://www.mynewsdesk.com/no/rss/source/47871/pressrelease'));
+                $newsItems = $this->checkCache(array('url' => $conf["news_url"]));
 
 
 
