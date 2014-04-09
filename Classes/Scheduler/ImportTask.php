@@ -117,7 +117,7 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 		    								'datetime' => strtotime($newsItem["date"]),
 		    								//'ext_url' => $newsItem["link"],
 		    								'author' => $newsItem["dc:creator"],
-		    								'type' => 2, // external url
+		    								'type' => 0, // external url
 								        	'crdate' => mktime(),
        										'tstamp' => mktime()
 										);
