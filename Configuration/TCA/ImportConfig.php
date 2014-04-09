@@ -6,10 +6,10 @@ if (!defined ('TYPO3_MODE')) {
 $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 	'ctrl' => $TCA['tx_pxamynewsdesk_domain_model_importconfig']['ctrl'],
 	'interface' => array(
-		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, title, description, newpid, newstable, newscat, apping, newsurl',
+		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, title, description, newpid, newstable, newscat, mapping, newsurl,newstype',
 	),
 	'types' => array(
-		'1' => array('showitem' => 'hidden;;1, title, description, newpid, newstable, newscat, mapping, newsurl,--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,starttime, endtime'),
+		'1' => array('showitem' => 'hidden;;1, title, description, newpid, newstable, newscat, mapping, newsurl,newstype,--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,starttime, endtime'),
 	),
 	'palettes' => array(
 		'1' => array('showitem' => ''),
@@ -95,7 +95,7 @@ $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 		),
 		'title' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xml:tx_pxamynewsdesk_domain_model_importconfig.title',
+			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xlf:tx_pxamynewsdesk_domain_model_importconfig.title',
 			'config' => array(
 				'type' => 'input',
 				'size' => 30,
@@ -104,7 +104,7 @@ $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 		),
 		'description' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xml:tx_pxamynewsdesk_domain_model_importconfig.description',
+			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xlf:tx_pxamynewsdesk_domain_model_importconfig.description',
 			'config' => array(
 				'type' => 'input',
 				'size' => 150,
@@ -113,7 +113,7 @@ $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 		),
 		'newpid' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xml:tx_pxamynewsdesk_domain_model_importconfig.newpid',
+			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xlf:tx_pxamynewsdesk_domain_model_importconfig.newpid',
 			'config' => array(
 				'type' => 'group',
 				'internal_type' => 'db',
@@ -131,11 +131,11 @@ $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 		),
 		'newstable' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xml:tx_pxamynewsdesk_domain_model_importconfig.newstable',
+			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xlf:tx_pxamynewsdesk_domain_model_importconfig.newstable',
 			'config' => array(
 				'type' => 'select',
 				'items' => array(
-					array('tt_news', 'tt_news'),
+					//array('tt_news', 'tt_news'),
 					array('news', 'tx_news_domain_model_news'),
 				),
 				'size' => 1,
@@ -145,7 +145,7 @@ $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 		),
 		'newscat' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xml:tx_pxamynewsdesk_domain_model_importconfig.newscat',
+			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xlf:tx_pxamynewsdesk_domain_model_importconfig.newscat',
 			'config' => array(
 				'type' => 'input',
 				'size' => 25,
@@ -154,7 +154,7 @@ $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 		),
 		'mapping' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xml:tx_pxamynewsdesk_domain_model_importconfig.mapping',
+			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xlf:tx_pxamynewsdesk_domain_model_importconfig.mapping',
 			'config' => array(
 				'type' => 'text',
 				'cols' => 40,
@@ -162,9 +162,24 @@ $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 				'eval' => 'trim'
 			),
 		),
+        'newstype' => array(
+            'exclude' => 0,
+            'l10n_mode' => 'mergeIfNotBlank',
+            'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xlf:tx_pxamynewsdesk_domain_model_importconfig.newstype',
+            'config' => array(
+                'type' => 'select',
+                'items' => array(
+                    array($ll . 'tx_news_domain_model_news.type.I.0', 0),
+                    array($ll . 'tx_news_domain_model_news.type.I.1', 1),
+                    array($ll . 'tx_news_domain_model_news.type.I.2', 2),
+                ),
+                'size' => 1,
+                'maxitems' => 1,
+            )
+        ),
 		'newsurl' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xml:tx_pxamynewsdesk_domain_model_importconfig.newsurl',
+			'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xlf:tx_pxamynewsdesk_domain_model_importconfig.newsurl',
 			'config' => array(
 				'type' => 'input',
 				'size' => 100,
@@ -173,5 +188,6 @@ $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 		),
 	),
 );
+
 
 ?>

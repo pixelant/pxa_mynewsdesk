@@ -17,6 +17,30 @@
 				<source>Newsid</source>
 			</trans-unit>
 
+
+            <trans-unit id="scheduler.title">
+            	<source>Import news items from Mynewsdesk</source>
+            </trans-unit>
+            <trans-unit id="tx_pxamynewsdesk_domain_model_importlog">
+            	<source>Import Log</source>
+            </trans-unit>
+            <trans-unit id="tx_pxamynewsdesk_domain_model_importlog.hash">
+            	<source>Hash</source>
+            </trans-unit>
+            <trans-unit id="tx_pxamynewsdesk_domain_model_importlog.newstable">
+            	<source>News table</source>
+            </trans-unit>
+            <trans-unit id="tx_pxamynewsdesk_domain_model_importlog.newsid">
+            	<source>News uid</source>
+            </trans-unit>
+            <trans-unit id="tx_pxamynewsdesk_domain_model_importlog.newspid">
+            	<source>News pid</source>
+            </trans-unit>
+            <trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.newscat">
+            	<source>News categories</source>
+            </trans-unit>
+
+
 			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig">
 				<source>Import Config</source>
 			</trans-unit>
@@ -37,6 +61,9 @@
 			</trans-unit>
 			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.newsurl">
 				<source>Newsurl</source>
+			</trans-unit>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.newstype">
+			    <source>News type</source>
 			</trans-unit>
 
 

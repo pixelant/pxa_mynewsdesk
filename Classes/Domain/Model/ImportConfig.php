@@ -86,6 +86,14 @@ class ImportConfig extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	protected $newsurl;
 
 	/**
+	 * Type of news
+	 *
+	 * @var string
+	 * @validate NotEmpty
+	 */
+	protected $newstype;
+
+	/**
 	 * Returns the title
 	 *
 	 * @return string $title
@@ -182,7 +190,7 @@ class ImportConfig extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	/**
 	 * Returns the mapping
-	 *
+	 *Newpid
 	 * @return string $mapping
 	 */
 	public function getMapping() {
@@ -217,6 +225,25 @@ class ImportConfig extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	public function setNewsurl($newsurl) {
 		$this->newsurl = $newsurl;
 	}
+
+    /**
+     * Returns the newstype
+     *
+     * @return string $newstype
+     */
+    public function getNewstype() {
+        return $this->newstype;
+    }
+
+    /**
+     * Sets the newstype
+     *
+     * @param string $newstype
+     * @return void
+     */
+    public function setNewstype($newstype) {
+        $this->newstype = $newstype;
+    }
 
 }
 ?>
