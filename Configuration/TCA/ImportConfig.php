@@ -135,7 +135,7 @@ $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 			'config' => array(
 				'type' => 'select',
 				'items' => array(
-					//array('tt_news', 'tt_news'),
+					array('tt_news', 'tt_news'),
 					array('news', 'tx_news_domain_model_news'),
 				),
 				'size' => 1,

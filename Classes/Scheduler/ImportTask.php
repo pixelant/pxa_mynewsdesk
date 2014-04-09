@@ -94,7 +94,7 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 				//  $newsItems = array();
 
 				//$this->getArrValuesByKey(\TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($xmlContent), "item", &$newsItems);
-                $newsItems = $this->checkCache(array('url' => $conf["news_url"]));
+                $newsItems = $this->getFeedWrapper(array('url' => $conf["news_url"]));
 
 
 
@@ -141,6 +141,37 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 										}
 									}
 									break;
+
+                                    case 'tt_news':
+                                        if(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_news')) {
+                                            $categories = explode(",", $conf["news_categories"]);
+                                            $insertArray = array(
+                                                'pid' => intval($conf["news_pid"]),
+                                                'title' => $newsItem["title"],
+                                                'short' => $newsItem["description"],
+                                                'bodytext' => $newsItem["description"],
+                                                'datetime' => strtotime($newsItem["pubDate"]),
+                                                'ext_url' => $newsItem["link"],
+                                                'author' => $newsItem["dc:creator"],
+                                                'type' => 2, // external url
+                                                'crdate' => mktime(),
+                                                'tstamp' => mktime()
+                                            );
+                                            if(is_array($categories)) $insertArray["category"] = count($categories);
+                                            $res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tt_news', $insertArray);
+                                            $newsId = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                                            if(is_array($categories) && $newsId) {
+                                                foreach($categories as $catId) {
+                                                    $insertArray = array(
+                                                        'uid_local' => $newsId,
+                                                        'uid_foreign' => $catId,
+                                                        'sorting' => 1
+                                                    );
+                                                    $res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tt_news_cat_mm', $insertArray);
+                                                }
+                                            }
+                                        }
+                                    break;
 								default:
 									// import into news ext will be here
 									break;
@@ -199,24 +230,12 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
       	return $config;  
     }
 
-    public function checkCache($data=array())
+    public function getFeedWrapper($data=array())
     {
         foreach ($data as $service => $feed)
         {
-            $path = '/tmp/' . $service . '.cache';
-            if ((!file_exists($path) || time() - filemtime($path) > 60) && $cache = fopen($path, 'w+'))
-            {
                 $rss_contents = $this->getFeed($feed);
-                fwrite($cache, $rss_contents);
-                fclose($cache);
                 return unserialize($rss_contents);
-            }
-            else
-            {
-                $cache = fopen($path, 'r');
-                return unserialize(file_get_contents($path));
-                fclose($cache);
-            }
         }
     }
 
