@@ -88,9 +88,8 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 		$this->importLogRepository = $this->objectManager->get('\\Pixelant\\PxaMynewsdesk\\Domain\\Repository\\ImportLogRepository');
 		$config = $this->getImportConf();
 		foreach ($config as $conf) {
-			$xmlContent = "";
-			if(trim($conf["news_url"])) $xmlContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(trim($conf["news_url"]));
-			if(!$xmlContent) continue;
+			if ($conf["news_table"] == "tx_news_domain_model_news" && !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('news')) continue;
+			if ($conf["news_table"] == "tt_news" && !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_news')) continue;
 			
 			$newsItems = $this->getFeed($conf["news_url"]);
 
@@ -98,71 +97,71 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 
 			foreach($newsItems["items"]["item"] as $newsItem ) {
 
-				$hash = \TYPO3\CMS\Core\Utility\GeneralUtility::hmac($newsItem["header"].$newsItem["published_at"]);
+				$hash = \TYPO3\CMS\Core\Utility\GeneralUtility::hmac($newsItem["id"]);
+// TODO: get rid of the log table, when we make sure that tt_news contain the ID from mynewsdesk somehow
 				$logCount = $this->importLogRepository->countByStringProperties(array("hash", "newstable"), array($hash, $conf["news_table"]), intval($conf["news_pid"]));
 				if($logCount) continue;
 				
 				switch ($conf["news_table"]) {
 					case 'tx_news_domain_model_news':
-						if(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('news')) {
-							$categories = explode(",", $conf["news_categories"]);
-							$insertArray = array(
-								'pid' => intval($conf["news_pid"]),
-									'title' => $newsItem["header"],
-									'teaser' => $newsItem["description"],
-									'bodytext' => $newsItem["body"],
-									'datetime' => strtotime($newsItem["created_at"]),
-									'author' => $newsItem["name"],
-									'type' => $conf["news_type"],
-									'crdate' => time(),
-									'tstamp' => time()
-								);
-							if ($conf['news_type'] == 2) $insertArray['ext_url'] = $newsItem["url"];
+						$categories = explode(",", $conf["news_categories"]);
+						$insertArray = array(
+							'pid' => intval($conf["news_pid"]),
+							'title' => $newsItem["header"],
+							'teaser' => $newsItem["description"],
+							'bodytext' => $newsItem["body"],
+							'datetime' => strtotime($newsItem["created_at"]),
+							'author' => $newsItem["name"],
+							'type' => $conf["news_type"],
+							'crdate' => time(),
+							'tstamp' => time(),
+							'import_id' => $newsItem['id'],
+							'import_source' => 'mynewsdesk',
+						);
+						if ($conf['news_type'] == 2) $insertArray['ext_url'] = $newsItem["url"];
 
-							$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news', $insertArray);
+						$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news', $insertArray);
 
-							$newsId = $GLOBALS['TYPO3_DB']->sql_insert_id();
-							if(is_array($categories) && $newsId) {
-								foreach($categories as $catId) {
-									$insertArray = array(
-										'uid_local' => $newsId,
-										'uid_foreign' => $catId,
-										'sorting' => 1
-										);
-									$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news_category_mm', $insertArray);
-								}
+						$newsId = $GLOBALS['TYPO3_DB']->sql_insert_id();
+						if(is_array($categories) && $newsId) {
+							foreach($categories as $catId) {
+								$insertArray = array(
+									'uid_local' => $newsId,
+									'uid_foreign' => $catId,
+									'sorting' => 1
+									);
+								$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news_category_mm', $insertArray);
 							}
 						}
 						break;
 
 					case 'tt_news':
-						if(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_news')) {
-							$categories = explode(",", $conf["news_categories"]);
-							$insertArray = array(
-								'pid' => intval($conf["news_pid"]),
-								'title' => $newsItem["header"],
-								'short' => $newsItem["summary"],
-								'bodytext' => $newsItem["body"],
-								'datetime' => strtotime($newsItem["published_at"]),
-								'author' => $newsItem["name"],
-								'type' => $conf["news_type"],
-								'crdate' => time(),
-								'tstamp' => time()
-							);
-							if ($conf['news_type'] == 2) $insertArray['ext_url'] = $newsItem["url"];
+					// TODO: check for duplicates in the tt_news based on uid
+						$categories = explode(",", $conf["news_categories"]);
+						$insertArray = array(
+							'pid' => intval($conf["news_pid"]),
+							'title' => $newsItem["header"],
+							'short' => $newsItem["summary"],
+							'bodytext' => $newsItem["body"],
+							'datetime' => strtotime($newsItem["published_at"]),
+							'author' => $newsItem["name"],
+							'type' => $conf["news_type"],
+							'crdate' => time(),
+							'tstamp' => time()
+						);
+						if ($conf['news_type'] == 2) $insertArray['ext_url'] = $newsItem["url"];
 
-							if(is_array($categories)) $insertArray["category"] = count($categories);
-							$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tt_news', $insertArray);
-							$newsId = $GLOBALS['TYPO3_DB']->sql_insert_id();
-							if(is_array($categories) && $newsId) {
-								foreach($categories as $catId) {
-									$insertArray = array(
-										'uid_local' => $newsId,
-										'uid_foreign' => $catId,
-										'sorting' => 1
-									);
-									$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tt_news_cat_mm', $insertArray);
-								}
+						if(is_array($categories)) $insertArray["category"] = count($categories);
+						$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tt_news', $insertArray);
+						$newsId = $GLOBALS['TYPO3_DB']->sql_insert_id();
+						if(is_array($categories) && $newsId) {
+							foreach($categories as $catId) {
+								$insertArray = array(
+									'uid_local' => $newsId,
+									'uid_foreign' => $catId,
+									'sorting' => 1
+								);
+								$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tt_news_cat_mm', $insertArray);
 							}
 						}
 						break;
@@ -212,10 +211,10 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //Set curl to return the data instead of printing it to the browser.
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,10); # timeout after 10 seconds, you can increase it
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,10); 
 		curl_setopt($ch, CURLOPT_USERAGENT , "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");
-		curl_setopt($ch, CURLOPT_URL, $url ); #set the url and get string together
+		curl_setopt($ch, CURLOPT_URL, $url ); 
 
 		$jsonPayload = curl_exec($ch);
 		curl_close($ch);
