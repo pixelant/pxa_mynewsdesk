@@ -21,17 +21,17 @@ $EM_CONF[$_EXTKEY] = array(
 	'shy' => '',
 	'priority' => '',
 	'module' => '',
-	'state' => 'alpha',
+	'state' => 'beta',
 	'internal' => '',
 	'uploadfolder' => '0',
 	'createDirs' => '',
 	'modify_tables' => '',
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
-	'version' => '0.0.1',
+	'version' => '0.9.0',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '4.5.5-6.1.99',
+			'typo3' => '6.1.0-6.2.99',
 		),
 		'conflicts' => array(
 		),
