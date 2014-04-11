@@ -47,30 +47,30 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 	protected $objectManager;
 
 
-    /**
-     *  persistenceManager
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
-     * @inject
-     */
-    protected $persistenceManager;
+		/**
+		 *  persistenceManager
+		 *
+		 * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
+		 * @inject
+		 */
+		protected $persistenceManager;
 
-    /**
-     *  importConfigRepository
-     *
-     * @var \Pixelant\PxaMynewsdesk\Domain\Repository\importConfigRepository
-     * @inject
-     */
+		/**
+		 *  importConfigRepository
+		 *
+		 * @var \Pixelant\PxaMynewsdesk\Domain\Repository\importConfigRepository
+		 * @inject
+		 */
 
-    protected $importConfigRepository;
+		protected $importConfigRepository;
 
-    /**
-     *  importLogRepository
-     *
-     * @var \Pixelant\PxaMynewsdesk\Domain\Repository\importLogRepository
-     */
+		/**
+		 *  importLogRepository
+		 *
+		 * @var \Pixelant\PxaMynewsdesk\Domain\Repository\importLogRepository
+		 */
 
-    protected $importLogRepository;
+		protected $importLogRepository;
 	
 	/**
 	 * Function executed from the Scheduler.
@@ -80,141 +80,118 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 
 	public function execute()
 	{
-        $GLOBALS['TYPO3_DB']->debugOutput = true;
+		$GLOBALS['TYPO3_DB']->debugOutput = true;
 
-        $this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
+		$this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
 		$this->persistenceManager = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager');
-	    $this->importConfigRepository = $this->objectManager->get('\\Pixelant\\PxaMynewsdesk\\Domain\\Repository\\ImportConfigRepository');
-	    $this->importLogRepository = $this->objectManager->get('\\Pixelant\\PxaMynewsdesk\\Domain\\Repository\\ImportLogRepository');
+		$this->importConfigRepository = $this->objectManager->get('\\Pixelant\\PxaMynewsdesk\\Domain\\Repository\\ImportConfigRepository');
+		$this->importLogRepository = $this->objectManager->get('\\Pixelant\\PxaMynewsdesk\\Domain\\Repository\\ImportLogRepository');
 		$config = $this->getImportConf();
 		foreach ($config as $conf) {
 			$xmlContent = "";
 			if(trim($conf["news_url"])) $xmlContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(trim($conf["news_url"]));
-			if($xmlContent) {
-				//  $newsItems = array();
+			if(!$xmlContent) continue;
+			
+			$newsItems = $this->getFeed($conf["news_url"]);
 
-				//$this->getArrValuesByKey(\TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($xmlContent), "item", &$newsItems);
-                $newsItems = $this->getFeedWrapper(array('url' => $conf["news_url"]));
+			if(!is_array($newsItems["items"]["item"])) continue;
 
+			foreach($newsItems["items"]["item"] as $newsItem ) {
 
+				$hash = \TYPO3\CMS\Core\Utility\GeneralUtility::hmac($newsItem["header"].$newsItem["published_at"]);
+				$logCount = $this->importLogRepository->countByStringProperties(array("hash", "newstable"), array($hash, $conf["news_table"]), intval($conf["news_pid"]));
+				if($logCount) continue;
+				
+				switch ($conf["news_table"]) {
+					case 'tx_news_domain_model_news':
+						if(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('news')) {
+							$categories = explode(",", $conf["news_categories"]);
+							$insertArray = array(
+								'pid' => intval($conf["news_pid"]),
+									'title' => $newsItem["header"],
+									'teaser' => $newsItem["description"],
+									'bodytext' => $newsItem["body"],
+									'datetime' => strtotime($newsItem["created_at"]),
+									'author' => $newsItem["name"],
+									'type' => $conf["news_type"],
+									'crdate' => time(),
+									'tstamp' => time()
+								);
+							if ($conf['news_type'] == 2) $insertArray['ext_url'] = $newsItem["url"];
 
-				if(is_array($newsItems)) {
-					foreach($newsItems as $newsItem ) {
+							$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news', $insertArray);
 
-						$hash = \TYPO3\CMS\Core\Utility\GeneralUtility::hmac($newsItem["title"].$newsItem["pubDate"]);
-						$logCount = $this->importLogRepository->countByStringProperties(array("hash", "newstable"), array($hash, $conf["news_table"]), intval($conf["news_pid"]));
-						if(!$logCount) {
-
-							switch ($conf["news_table"]) {
-								case 'tx_news_domain_model_news':
-									if(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('news')) {
-										$categories = explode(",", $conf["news_categories"]);
-										$insertArray = array(
-											'pid' => intval($conf["news_pid"]),
-		    								'title' => $newsItem["title"],
-		    								'teaser' => $newsItem["description"],
-		    								'bodytext' => $newsItem["description"],
-		    								'datetime' => strtotime($newsItem["date"]),
-		    								//'ext_url' => $newsItem["link"],
-		    								'author' => $newsItem["dc:creator"],
-		    								'type' => $conf["news_type"], // external url
-								        	'crdate' => mktime(),
-       										'tstamp' => mktime()
+							$newsId = $GLOBALS['TYPO3_DB']->sql_insert_id();
+							if(is_array($categories) && $newsId) {
+								foreach($categories as $catId) {
+									$insertArray = array(
+										'uid_local' => $newsId,
+										'uid_foreign' => $catId,
+										'sorting' => 1
 										);
-
-
-                                        $GLOBALS['TYPO3_DB']->debugOutput = true;
-
-										$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news', $insertArray);
-
-
-										$newsId = $GLOBALS['TYPO3_DB']->sql_insert_id();
-										if(is_array($categories) && $newsId) {
-											foreach($categories as $catId) {
-												$insertArray = array(
-													'uid_local' => $newsId,
-													'uid_foreign' => $catId,
-													'sorting' => 1
-												);
-												$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news_category_mm', $insertArray);
-											}
-										}
-									}
-									break;
-
-                                    case 'tt_news':
-                                        if(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_news')) {
-                                            $categories = explode(",", $conf["news_categories"]);
-                                            $insertArray = array(
-                                                'pid' => intval($conf["news_pid"]),
-                                                'title' => $newsItem["title"],
-                                                'short' => $newsItem["description"],
-                                                'bodytext' => $newsItem["description"],
-                                                'datetime' => strtotime($newsItem["pubDate"]),
-                                                'ext_url' => $newsItem["link"],
-                                                'author' => $newsItem["dc:creator"],
-                                                'type' => 2, // external url
-                                                'crdate' => mktime(),
-                                                'tstamp' => mktime()
-                                            );
-                                            if(is_array($categories)) $insertArray["category"] = count($categories);
-                                            $res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tt_news', $insertArray);
-                                            $newsId = $GLOBALS['TYPO3_DB']->sql_insert_id();
-                                            if(is_array($categories) && $newsId) {
-                                                foreach($categories as $catId) {
-                                                    $insertArray = array(
-                                                        'uid_local' => $newsId,
-                                                        'uid_foreign' => $catId,
-                                                        'sorting' => 1
-                                                    );
-                                                    $res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tt_news_cat_mm', $insertArray);
-                                                }
-                                            }
-                                        }
-                                    break;
-								default:
-									// import into news ext will be here
-									break;
-							}
-
-
-							if($newsId) {
-								$newImportLog = $this->objectManager->get('Pixelant\PxaMynewsdesk\Domain\Model\ImportLog');
-								$newImportLog->setHash($hash);
-								$newImportLog->setNewstable($conf["news_table"]);
-								$newImportLog->setNewsId($newsId);
-								$newImportLog->setNewsPid($conf["news_pid"]);
-								$this->importLogRepository->add($newImportLog);
-								$this->persistenceManager->persistAll();
+									$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news_category_mm', $insertArray);
+								}
 							}
 						}
-					}
+						break;
 
+					case 'tt_news':
+						if(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_news')) {
+							$categories = explode(",", $conf["news_categories"]);
+							$insertArray = array(
+								'pid' => intval($conf["news_pid"]),
+								'title' => $newsItem["header"],
+								'short' => $newsItem["summary"],
+								'bodytext' => $newsItem["body"],
+								'datetime' => strtotime($newsItem["published_at"]),
+								'author' => $newsItem["name"],
+								'type' => $conf["news_type"],
+								'crdate' => time(),
+								'tstamp' => time()
+							);
+							if ($conf['news_type'] == 2) $insertArray['ext_url'] = $newsItem["url"];
+
+							if(is_array($categories)) $insertArray["category"] = count($categories);
+							$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tt_news', $insertArray);
+							$newsId = $GLOBALS['TYPO3_DB']->sql_insert_id();
+							if(is_array($categories) && $newsId) {
+								foreach($categories as $catId) {
+									$insertArray = array(
+										'uid_local' => $newsId,
+										'uid_foreign' => $catId,
+										'sorting' => 1
+									);
+									$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tt_news_cat_mm', $insertArray);
+								}
+							}
+						}
+						break;
+					default:
+						// import into news ext will be here
+						break;
+				}
+
+
+				if($newsId) {
+					$newImportLog = $this->objectManager->get('Pixelant\PxaMynewsdesk\Domain\Model\ImportLog');
+					$newImportLog->setHash($hash);
+					$newImportLog->setNewstable($conf["news_table"]);
+					$newImportLog->setNewsId($newsId);
+					$newImportLog->setNewsPid($conf["news_pid"]);
+					$this->importLogRepository->add($newImportLog);
+					$this->persistenceManager->persistAll();
 				}
 			}
 		}
 		return TRUE;
 	}
 
-	public function getArrValuesByKey($arr, $searchKey, &$resultArr) {
-       foreach($arr as $key => $val) {
-        if($key==$searchKey) {
-          $resultArr[] = $val;
-        } else {
-          if( is_array($val) )  {
-            $this->getArrValuesByKey($val, $searchKey, &$resultArr);
-          }
-        }  
-       }
-    }
+	private function getImportConf() {
+		$configUids =  \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->pxamynewsdeskconfiguration, TRUE);
+		$config = array();
 
-	private function getImportConf()
-    {
-        $configUids =  \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->pxamynewsdeskconfiguration, TRUE);
-        $config = array();
-
-        
-        $importConfigs = $this->importConfigRepository->findAllByUids(implode(',', $configUids));
+				
+		$importConfigs = $this->importConfigRepository->findAllByUids(implode(',', $configUids));
 		foreach($importConfigs as $importConfig) {
 			$config[] = array(
 				"news_table" => $importConfig->getNewstable(),
@@ -226,37 +203,25 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 				"news_type" => $importConfig->getNewstype(),
 			);
 		}
-        
-      	return $config;  
-    }
+				
+		return $config;  
+	}
 
-    public function getFeedWrapper($data=array())
-    {
-        foreach ($data as $service => $feed)
-        {
-                $rss_contents = $this->getFeed($feed);
-                return unserialize($rss_contents);
-        }
-    }
+	protected function getFeed($url)
+	{
 
-    protected function getFeed($url)
-    {
-        $xml = array();
-        $doc = new \DOMDocument();
-        $doc->load($url);
-        foreach ($doc->getElementsByTagName('item') as $node)
-        {
-            $rss = array (
-                'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
-                'description' => $node->getElementsByTagName('description')->item(0)->nodeValue,
-                'link' => $node->getElementsByTagName('link')->item(0)->nodeValue,
-                'date' => $node->getElementsByTagName('pubDate')->item(0)->nodeValue,
-                'dc:creator' => $node->getElementsByTagName('dc:creator')->item(0)->nodeValue
-            );
-            array_push($xml, $rss);
-        } //endforeach element ids
-        return serialize($xml);
-    }
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //Set curl to return the data instead of printing it to the browser.
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,10); # timeout after 10 seconds, you can increase it
+		curl_setopt($ch, CURLOPT_USERAGENT , "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");
+		curl_setopt($ch, CURLOPT_URL, $url ); #set the url and get string together
+
+		$jsonPayload = curl_exec($ch);
+		curl_close($ch);
+
+		return json_decode($jsonPayload, TRUE);
+	}
 
 }
 
