@@ -1,5 +1,5 @@
 <?php
-
+namespace Pixelant\PxaMynewsdesk\Scheduler ;
 /***************************************************************
 *  Copyright notice
 *
@@ -26,20 +26,13 @@
 /**
  *
  * @author Maksym Leskiv <maksym@pixelant.se>
+ * @author Jozef Spisiak <jozef@pixelant.se>
  * @package
  * @version $Id:$
  */
 
-namespace Pixelant\PxaMynewsdesk\Scheduler ;
 
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('pxa_mynewsdesk') . 'Classes/Domain/Repository/ImportConfigRepository.php');
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('pxa_mynewsdesk') . 'Classes/Domain/Repository/ImportLogRepository.php');
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('pxa_mynewsdesk') . 'Classes/Domain/Model/ImportLog.php');
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('pxa_mynewsdesk') . 'Classes/Domain/Model/ImportConfig.php');
-
-
-class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
-{
+class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 
 	/**
 	 * @var /TYPO3/CMS\Extbase\Object\ObjectManager
@@ -47,30 +40,30 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 	protected $objectManager;
 
 
-		/**
-		 *  persistenceManager
-		 *
-		 * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
-		 * @inject
-		 */
-		protected $persistenceManager;
+	/**
+	 *  persistenceManager
+	 *
+	 * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
+	 * @inject
+	 */
+	protected $persistenceManager;
 
-		/**
-		 *  importConfigRepository
-		 *
-		 * @var \Pixelant\PxaMynewsdesk\Domain\Repository\importConfigRepository
-		 * @inject
-		 */
+	/**
+	 *  importConfigRepository
+	 *
+	 * @var \Pixelant\PxaMynewsdesk\Domain\Repository\importConfigRepository
+	 * @inject
+	 */
 
-		protected $importConfigRepository;
+	protected $importConfigRepository;
 
-		/**
-		 *  importLogRepository
-		 *
-		 * @var \Pixelant\PxaMynewsdesk\Domain\Repository\importLogRepository
-		 */
+	/**
+	 *  importLogRepository
+	 *
+	 * @var \Pixelant\PxaMynewsdesk\Domain\Repository\importLogRepository
+	 */
 
-		protected $importLogRepository;
+	protected $importLogRepository;
 	
 	/**
 	 * Function executed from the Scheduler.
@@ -78,8 +71,7 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 	 * @return	void
 	 */
 
-	public function execute()
-	{
+	public function execute() {
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
 
 		$this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
@@ -91,6 +83,8 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 			if ($conf["news_table"] == "tx_news_domain_model_news" && !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('news')) continue;
 			if ($conf["news_table"] == "tt_news" && !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_news')) continue;
 			
+			if ($conf["news_table"] == "tx_news_domain_model_news") $importService = $this->objectManager->get('Tx_News_Domain_Service_NewsImportService');
+
 			$newsItems = $this->getFeed($conf["news_url"]);
 
 			if(!is_array($newsItems["items"]["item"])) continue;
@@ -107,11 +101,14 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 						$categories = explode(",", $conf["news_categories"]);
 						$insertArray = array(
 							'pid' => intval($conf["news_pid"]),
+							'sys_language_uid' => 0, // TODO: add language possibilty
 							'title' => $newsItem["header"],
 							'teaser' => $newsItem["description"],
 							'bodytext' => $newsItem["body"],
 							'datetime' => strtotime($newsItem["created_at"]),
-							'author' => $newsItem["name"],
+							'author' => $newsItem["contact_people"]["contact_person"]["name"],
+							'author_email' => $newsItem["contact_people"]["contact_person"]["email"],
+							'media' => $this->getMedia($newsItem["image"],$newsItem["header"]),
 							'type' => $conf["news_type"],
 							'crdate' => time(),
 							'tstamp' => time(),
@@ -120,19 +117,17 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 						);
 						if ($conf['news_type'] == 2) $insertArray['ext_url'] = $newsItem["url"];
 
-						$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news', $insertArray);
-
-						$newsId = $GLOBALS['TYPO3_DB']->sql_insert_id();
 						if(is_array($categories) && $newsId) {
+							$categoriesArray = array();
 							foreach($categories as $catId) {
-								$insertArray = array(
-									'uid_local' => $newsId,
-									'uid_foreign' => $catId,
-									'sorting' => 1
-									);
-								$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_news_domain_model_news_category_mm', $insertArray);
+								$categoriesArray[] = $catId;
 							}
 						}
+						$insertArray['categories'] = $categoriesArray;
+						$importService->import(array($insertArray));
+						// cleanup
+						unlink(PATH_site . $insertArray["media"][0]["image"]);
+						$newsId = true;
 						break;
 
 					case 'tt_news':
@@ -206,22 +201,27 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
 		return $config;  
 	}
 
-	protected function getFeed($url)
-	{
-
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,10); 
-		curl_setopt($ch, CURLOPT_USERAGENT , "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");
-		curl_setopt($ch, CURLOPT_URL, $url ); 
-
-		$jsonPayload = curl_exec($ch);
-		curl_close($ch);
+	protected function getFeed($url) {
+		$jsonPayload = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($url); 
 
 		return json_decode($jsonPayload, TRUE);
 	}
 
+	protected function getMedia($imageUrl,$title) {
+		$filename = pathinfo($imageUrl, PATHINFO_BASENAME);
+		$imagePath = 'typo3temp/mynewsdesk_' . $filename;
+		copy($imageUrl,PATH_site . $imagePath);
+		$media = array();
+		$media[] = array(
+			'title' => $title,
+			'alt' => $title,
+			'caption' => "",
+			'image' => $imagePath,
+			'type' => 0,
+			'showinpreview' => 1
+		);
+		return $media;
+	}
 }
 
 
