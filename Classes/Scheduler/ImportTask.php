@@ -98,13 +98,14 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 				
 				switch ($conf["news_table"]) {
 					case 'tx_news_domain_model_news':
+						$fieldContent = str_replace(PHP_EOL,' ', $newsItem["body"]);
 						$categories = explode(",", $conf["news_categories"]);
 						$insertArray = array(
 							'pid' => intval($conf["news_pid"]),
 							'sys_language_uid' => 0, // TODO: add language possibilty
 							'title' => $newsItem["header"],
 							'teaser' => $newsItem["description"],
-							'bodytext' => $newsItem["body"],
+							'bodytext' => $fieldContent,
 							'datetime' => strtotime($newsItem["created_at"]),
 							'author' => $newsItem["contact_people"]["contact_person"]["name"],
 							'author_email' => $newsItem["contact_people"]["contact_person"]["email"],
