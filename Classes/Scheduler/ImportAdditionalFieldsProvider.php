@@ -31,7 +31,7 @@ class ImportAdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalF
 {
     public function getAdditionalFields(array &$taskInfo, $task, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject) {
 
-        $pxamynewsdeskImportConfig = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_pxamynewsdesk_domain_model_importconfig', 'hidden=0
+        $pxamynewsdeskImportConfig = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_pxamynewsdesk_domain_model_importconfig', 'deleted=0 AND hidden=0
                 AND (starttime=0 OR starttime<=' . $GLOBALS['EXEC_TIME'] . ')');
         
         $fieldCodeCfgRec = '';
