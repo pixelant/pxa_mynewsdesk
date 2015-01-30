@@ -107,8 +107,8 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 							'teaser' => $newsItem["description"],
 							'bodytext' => $fieldContent,
 							'datetime' => strtotime($newsItem["created_at"]),
-							'author' => $newsItem["contact_people"]["contact_person"]["name"],
-							'author_email' => $newsItem["contact_people"]["contact_person"]["email"],
+							/* 'author' => $newsItem["contact_people"]["contact_person"]["name"],
+							'author_email' => $newsItem["contact_people"]["contact_person"]["email"], */
 							'media' => $this->getMedia($newsItem["image"],$newsItem["header"]),
 							'type' => $conf["news_type"],
 							'crdate' => time(),
@@ -116,8 +116,16 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 							'import_id' => $newsItem['id'],
 							'import_source' => 'mynewsdesk',
 						);
+
+						if(is_array($newsItem["contact_people"]["contact_person"])){
+							$insertArray['author'] = $newsItem["contact_people"]["contact_person"]["name"];
+                                                        $insertArray['author_email'] = $newsItem["contact_people"]["contact_person"]["email"];
+						}
+
 						if ($conf['news_type'] == 2) $insertArray['ext_url'] = $newsItem["url"];
 
+
+						$newsId = true;
 						if(is_array($categories) && $newsId) {
 							$categoriesArray = array();
 							foreach($categories as $catId) {
@@ -128,7 +136,6 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 						$importService->import(array($insertArray));
 						// cleanup
 						unlink(PATH_site . $insertArray["media"][0]["image"]);
-						$newsId = true;
 						break;
 
 					case 'tt_news':
