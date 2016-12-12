@@ -36,9 +36,6 @@ class ImportAdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalF
         
         $fieldCodeCfgRec = '';
         
-
-        $fieldCodeCfgRecPublisher = '';
-        
         if (empty($taskInfo['pxamynewsdeskconfiguration'])) {
             if($parentObject->CMD == 'edit') {
                 $taskInfo['pxamynewsdeskconfiguration'] = $task->pxamynewsdeskconfiguration;
@@ -73,5 +70,3 @@ class ImportAdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalF
         $task->pxamynewsdeskconfiguration = $submittedData['pxamynewsdeskconfiguration'];
     }
 }
-
-?>
