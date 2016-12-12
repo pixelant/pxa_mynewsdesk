@@ -3,7 +3,7 @@
  *  Copyright notice
  *
  *  (c) 2013 Maksym Leskiv <maksym@pixelant.se>, Pixelant AB
- *  
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -92,6 +92,13 @@ class ImportConfig extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @validate NotEmpty
 	 */
 	protected $newstype;
+
+    /**
+     * Enalbe import of tags
+     *
+     * @var bool
+     */
+    protected $importTags = false;
 
 	/**
 	 * Returns the title
@@ -245,5 +252,19 @@ class ImportConfig extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
         $this->newstype = $newstype;
     }
 
+    /**
+     * @return bool
+     */
+    public function isImportTagsEnabled()
+    {
+        return $this->importTags;
+    }
+
+    /**
+     * @param bool $importTags
+     */
+    public function setImportTags($importTags)
+    {
+        $this->importTags = $importTags;
+    }
 }
-?>

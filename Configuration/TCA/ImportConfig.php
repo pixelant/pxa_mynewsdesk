@@ -9,7 +9,7 @@ $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, title, description, newpid, newstable, newscat, mapping, newsurl,newstype',
 	),
 	'types' => array(
-		'1' => array('showitem' => 'hidden;;1, title, description, newpid, newstable, newscat, mapping, newsurl,newstype,--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,starttime, endtime'),
+		'1' => array('showitem' => 'hidden;;1, title, description, newpid, newstable, newscat, import_tags, mapping, newsurl,newstype,--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,starttime, endtime'),
 	),
 	'palettes' => array(
 		'1' => array('showitem' => ''),
@@ -186,8 +186,12 @@ $TCA['tx_pxamynewsdesk_domain_model_importconfig'] = array(
 				'eval' => 'trim,required'
 			),
 		),
+        'import_tags' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_db.xlf:tx_pxamynewsdesk_domain_model_importconfig.import_tags',
+            'config' => array(
+                'type' => 'check',
+            )
+        ),
 	),
 );
-
-
-?>
