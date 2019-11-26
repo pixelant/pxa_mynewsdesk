@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,7 +25,9 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-namespace Pixelant\PxaMynewsdesk\Domain\Model ;
+namespace Pixelant\PxaMynewsdesk\Domain\Model;
+
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
  *
@@ -32,230 +36,135 @@ namespace Pixelant\PxaMynewsdesk\Domain\Model ;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class ImportConfig extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
-
-	/**
-	 * Title
-	 *
-	 * @var string
-	 * @validate NotEmpty
-	 */
-	protected $title;
-
-	/**
-	 * Description
-	 *
-	 * @var string
-	 */
-	protected $description;
-
-	/**
-	 * News storage pid
-	 *
-	 * @var integer
-	 */
-	protected $newpid;
-
-	/**
-	 * News table
-	 *
-	 * @var string
-	 */
-	protected $newstable;
-
-	/**
-	 * Mapping configuration
-	 *
-	 * @var string
-	 */
-	protected $mapping;
-
-	/**
-	 * News categories
-	 *
-	 * @var string
-	 */
-	protected $newscat;
-
-	/**
-	 * Url with news xml
-	 *
-	 * @var string
-	 * @validate NotEmpty
-	 */
-	protected $newsurl;
-
-	/**
-	 * Type of news
-	 *
-	 * @var string
-	 * @validate NotEmpty
-	 */
-	protected $newstype;
+class ImportConfig extends AbstractEntity
+{
 
     /**
-     * Enalbe import of tags
+     * Title
+     *
+     * @var string
+     */
+    protected $title;
+
+    /**
+     * News storage pid
+     *
+     * @var integer
+     */
+    protected $storage;
+
+    /**
+     * News categories. List of uids
+     *
+     * @var string
+     */
+    protected $categories;
+
+    /**
+     * Url with news xml
+     *
+     * @var string
+     */
+    protected $sourceUrl;
+
+    /**
+     * Type of news
+     *
+     * @var int
+     */
+    protected $type;
+
+    /**
+     * Enable import of tags
      *
      * @var bool
      */
     protected $importTags = false;
 
-	/**
-	 * Returns the title
-	 *
-	 * @return string $title
-	 */
-	public function getTitle() {
-		return $this->title;
-	}
-
-	/**
-	 * Sets the title
-	 *
-	 * @param string $title
-	 * @return void
-	 */
-	public function setTitle($title) {
-		$this->title = $title;
-	}
-
-	/**
-	 * Returns the description
-	 *
-	 * @return string $description
-	 */
-	public function getDescription() {
-		return $this->description;
-	}
-
-	/**
-	 * Sets the description
-	 *
-	 * @param string $description
-	 * @return void
-	 */
-	public function setDescription($description) {
-		$this->description = $description;
-	}
-
-	/**
-	 * Returns the newpid
-	 *
-	 * @return integer $newpid
-	 */
-	public function getNewpid() {
-		return $this->newpid;
-	}
-
-	/**
-	 * Sets the newpid
-	 *
-	 * @param integer $newpid
-	 * @return void
-	 */
-	public function setNewpid($newpid) {
-		$this->newpid = $newpid;
-	}
-
-	/**
-	 * Returns the newstable
-	 *
-	 * @return string $newstable
-	 */
-	public function getNewstable() {
-		return $this->newstable;
-	}
-
-	/**
-	 * Sets the newstable
-	 *
-	 * @param string $newstable
-	 * @return void
-	 */
-	public function setNewstable($newstable) {
-		$this->newstable = $newstable;
-	}
-
-	/**
-	 * Returns the newscat
-	 *
-	 * @return string $newscat
-	 */
-	public function getNewscat() {
-		return $this->newscat;
-	}
-
-	/**
-	 * Sets the newscat
-	 *
-	 * @param string $newscat
-	 * @return void
-	 */
-	public function setNewscat($newscat) {
-		$this->newscat = $newscat;
-	}
-
-	/**
-	 * Returns the mapping
-	 *Newpid
-	 * @return string $mapping
-	 */
-	public function getMapping() {
-		return $this->mapping;
-	}
-
-	/**
-	 * Sets the mapping
-	 *
-	 * @param string $mapping
-	 * @return void
-	 */
-	public function setMapping($mapping) {
-		$this->mapping = $mapping;
-	}
-
-	/**
-	 * Returns the newsurl
-	 *
-	 * @return string $newsurl
-	 */
-	public function getNewsurl() {
-		return $this->newsurl;
-	}
-
-	/**
-	 * Sets the newsurl
-	 *
-	 * @param string $newsurl
-	 * @return void
-	 */
-	public function setNewsurl($newsurl) {
-		$this->newsurl = $newsurl;
-	}
-
     /**
-     * Returns the newstype
-     *
-     * @return string $newstype
+     * @return string
      */
-    public function getNewstype() {
-        return $this->newstype;
+    public function getTitle(): string
+    {
+        return $this->title;
     }
 
     /**
-     * Sets the newstype
-     *
-     * @param string $newstype
-     * @return void
+     * @param string $title
      */
-    public function setNewstype($newstype) {
-        $this->newstype = $newstype;
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStorage(): int
+    {
+        return $this->storage;
+    }
+
+    /**
+     * @param int $storage
+     */
+    public function setStorage(int $storage): void
+    {
+        $this->storage = $storage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCategories(): string
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param string $categories
+     */
+    public function setCategories(string $categories): void
+    {
+        $this->categories = $categories;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSourceUrl(): string
+    {
+        return $this->sourceUrl;
+    }
+
+    /**
+     * @param string $sourceUrl
+     */
+    public function setSourceUrl(string $sourceUrl): void
+    {
+        $this->sourceUrl = $sourceUrl;
+    }
+
+    /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType(int $type): void
+    {
+        $this->type = $type;
     }
 
     /**
      * @return bool
      */
-    public function isImportTagsEnabled()
+    public function isImportTags(): bool
     {
         return $this->importTags;
     }
@@ -263,7 +172,7 @@ class ImportConfig extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
     /**
      * @param bool $importTags
      */
-    public function setImportTags($importTags)
+    public function setImportTags(bool $importTags): void
     {
         $this->importTags = $importTags;
     }
