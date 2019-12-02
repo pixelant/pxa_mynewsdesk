@@ -1,12 +1,16 @@
 <?php
+declare(strict_types=1);
 
-namespace Pixelant\PxaMynewsdesk\Domain\Repository ;
+namespace Pixelant\PxaMynewsdesk\Domain\Repository;
+
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Maksym Leskiv <maksym@pixelant.se>, Pixelant
- *  
+ *  Pixelant
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,17 +33,23 @@ namespace Pixelant\PxaMynewsdesk\Domain\Repository ;
 /**
  * A repository for import config
  */
-class ImportConfigRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
-  public function findAllByUids($uids) {
+class ImportConfigRepository extends Repository
+{
+    /**
+     * Find configurations by uids list
+     *
+     * @param array $uids
+     * @return QueryResultInterface
+     */
+    public function findAllByUids(array $uids): QueryResultInterface
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setRespectStoragePage(false);
 
-    if ($uids) {
-      $query = $this->createQuery();
-      $query->statement('SELECT * FROM `tx_pxamynewsdesk_domain_model_importconfig` WHERE deleted=0 AND hidden=0 and uid IN (' . $uids . ')');
-      return $query->execute()->toArray();
-    } else {
-      return false;
+        $query->matching(
+            $query->in('uid', $uids)
+        );
+
+        return $query->execute();
     }
-  }
-  
 }
-?>

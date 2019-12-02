@@ -10,34 +10,20 @@
  * "version" and "dependencies" must not be touched!
  ***************************************************************/
 
-$EM_CONF[$_EXTKEY] = array(
-	'title' => 'Mynewsdesk import',
-	'description' => 'Import of Mynewsdesk news items into TYPO3 table
-',
-	'category' => 'plugin',
-	'author' => 'Maksym Leskiv',
-	'author_email' => 'maksym@pixelant.se',
-	'author_company' => 'Pixelant AB',
-	'shy' => '',
-	'priority' => '',
-	'module' => '',
-	'state' => 'beta',
-	'internal' => '',
-	'uploadfolder' => '0',
-	'createDirs' => '',
-	'modify_tables' => '',
-	'clearCacheOnLoad' => 0,
-	'lockType' => '',
-	'version' => '0.9.0',
-	'constraints' => array(
-		'depends' => array(
-			'typo3' => '6.1.0-6.2.99',
-		),
-		'conflicts' => array(
-		),
-		'suggests' => array(
-		),
-	),
-);
-
-?>
+$EM_CONF[$_EXTKEY] = [
+    'title' => 'MyNewsDesk import',
+    'description' => 'Import of MyNewsDesk news items into TYPO3 news extension',
+    'category' => 'be',
+    'author' => 'Pixelant',
+    'author_email' => 'info@pixelant.net',
+    'author_company' => 'Pixelant',
+    'state' => 'stable',
+    'version' => '2.0.0',
+    'constraints' => [
+        'depends' => [
+            'typo3' => '9.5.0-9.5.99',
+        ],
+        'conflicts' => [],
+        'suggests' => [],
+    ],
+];

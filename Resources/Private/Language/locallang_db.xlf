@@ -3,94 +3,27 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2013-04-29T22:10:22Z" product-name="pxa_mynewsdesk">
 		<header/>
 		<body>
-
-			<trans-unit id="tx_pxamynewsdesk_domain_model_importlog">
-				<source>Import Log</source>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig">
+			    <source>MyNewsDesk Import Configuration</source>
 			</trans-unit>
-			<trans-unit id="tx_pxamynewsdesk_domain_model_importlog.hash">
-				<source>Hash</source>
-			</trans-unit>
-			<trans-unit id="tx_pxamynewsdesk_domain_model_importlog.newstable">
-				<source>Newstable</source>
-			</trans-unit>
-			<trans-unit id="tx_pxamynewsdesk_domain_model_importlog.newsid">
-				<source>Newsid</source>
-			</trans-unit>
-
-
-            <trans-unit id="scheduler.title">
-            	<source>Import news items from Mynewsdesk</source>
-            </trans-unit>
-            <trans-unit id="tx_pxamynewsdesk_domain_model_importlog">
-            	<source>Import Log</source>
-            </trans-unit>
-            <trans-unit id="tx_pxamynewsdesk_domain_model_importlog.hash">
-            	<source>Hash</source>
-            </trans-unit>
-            <trans-unit id="tx_pxamynewsdesk_domain_model_importlog.newstable">
-            	<source>News table</source>
-            </trans-unit>
-            <trans-unit id="tx_pxamynewsdesk_domain_model_importlog.newsid">
-            	<source>News uid</source>
-            </trans-unit>
-            <trans-unit id="tx_pxamynewsdesk_domain_model_importlog.newspid">
-            	<source>News pid</source>
-            </trans-unit>
-            <trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.newscat">
+            <trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.categories">
             	<source>News categories</source>
             </trans-unit>
-
-
-			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig">
-				<source>Import Config</source>
-			</trans-unit>
 			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.title">
 				<source>Title</source>
 			</trans-unit>
-			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.description">
-				<source>Description</source>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.storage">
+				<source>News storage</source>
 			</trans-unit>
-			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.newpid">
-				<source>Newpid</source>
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.source_url">
+				<source>Source URL</source>
 			</trans-unit>
-			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.newstable">
-				<source>Newstable</source>
-			</trans-unit>
-			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.mapping">
-				<source>Mapping</source>
-			</trans-unit>
-			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.newsurl">
-				<source>Newsurl</source>
-			</trans-unit>
-			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.newstype">
+			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.type">
 			    <source>News type</source>
 			</trans-unit>
 			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.import_tags">
-				<source>Import tags</source>
+				<source>Enable tags import</source>
 			</trans-unit>
-
-
-
-			<trans-unit id="tx_pxamynewsdesk_scheduler_importtask.title">
-				<source>Import news items from Mynewsdesk</source>
-			</trans-unit>
-
-			<trans-unit id="tx_pxamynewsdesk_scheduler_importtask.description">
-				<source>Import news items from Mynewsdesk</source>
-			</trans-unit>
-
-			<trans-unit id="tx_pxamynewsdesk_scheduler_importtask.configuration">
-				<source>Configuration records</source>
-			</trans-unit>
-
-			<trans-unit id="tx_pxamynewsdesk_scheduler_importtask_cleanertask.title">
-				<source>Clear log records from Mynewsdesk</source>
-			</trans-unit>
-
-			<trans-unit id="tx_pxamynewsdesk_scheduler_cleanertask.description">
-				<source>Clear log records refecencing to deleted news items</source>
-			</trans-unit>
-
 		</body>
 	</file>
 </xliff>
