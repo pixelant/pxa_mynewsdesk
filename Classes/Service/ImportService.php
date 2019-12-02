@@ -73,8 +73,10 @@ class ImportService
                     $insertItems[] = $this->createImportItemArray($configuration, $feedItem);
                 }
             }
-            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($insertItems, 'Debug', 16);
-            die;
+
+            if (!empty($insertItems)) {
+                $this->newsImportService->import($insertItems);
+            }
         }
     }
 
