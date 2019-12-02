@@ -4,7 +4,7 @@
 		<header/>
 		<body>
 			<trans-unit id="tx_pxamynewsdesk_domain_model_importconfig">
-			    <source>My Newsdesk Import Configuration</source>
+			    <source>MyNewsDesk Import Configuration</source>
 			</trans-unit>
             <trans-unit id="tx_pxamynewsdesk_domain_model_importconfig.categories">
             	<source>News categories</source>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Maksym Leskiv <maksym@pixelant.se>, Pixelant AB
+ *  (c) Pixelant AB
  *
  *  All rights reserved
  *
@@ -38,7 +38,6 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
  */
 class ImportConfig extends AbstractEntity
 {
-
     /**
      * Title
      *
