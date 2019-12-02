@@ -49,14 +49,6 @@ class ImportAdditionalFieldsProvider extends AbstractAdditionalFieldProvider
      */
     public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $parentObject)
     {
-        $configs = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable('tx_pxamynewsdesk_domain_model_importconfig')
-            ->select(
-                ['uid', 'title'],
-                'tx_pxamynewsdesk_domain_model_importconfig'
-            )
-            ->fetchAll();
-
         $action = $parentObject->getCurrentAction();
         if (empty($taskInfo['configurations'])) {
             if ($action->equals(Action::ADD)) {
@@ -67,15 +59,21 @@ class ImportAdditionalFieldsProvider extends AbstractAdditionalFieldProvider
             }
         }
 
-        $selectedValues = $taskInfo['configurations'];
-
         $optionsHtml = '';
-        foreach ($configs as $config) {
-            $optionsHtml .= '<option value="' . $config['uid'] . '" ' . (in_array($config['uid'], $selectedValues) ? 'selected' : '') . '>' . $config['title'] . '</option>';
+        foreach ($this->selectConfigs() as $config) {
+            $optionsHtml .= sprintf(
+                '<option value="%d"%s>%s</option>',
+                $config['uid'],
+                in_array($config['uid'], $taskInfo['configurations']) ? ' selected' : '',
+                $config['title']
+            );
         }
 
 
-        $fieldCode = '<select name="tx_scheduler[pxamynewsdesk_configurations][]" multiple="multiple">' . $optionsHtml . '</select>';
+        $fieldCode = sprintf(
+            '<select name="tx_scheduler[pxamynewsdesk_configurations][]" multiple="multiple">%s</select>',
+            $optionsHtml
+        );
         $additionalFields['pxamynewsdesk_configurations'] = array(
             'code' => $fieldCode,
             'label' => 'LLL:EXT:pxa_mynewsdesk/Resources/Private/Language/locallang_be.xlf:scheduler.configurations'
@@ -114,5 +112,21 @@ class ImportAdditionalFieldsProvider extends AbstractAdditionalFieldProvider
     public function saveAdditionalFields(array $submittedData, \TYPO3\CMS\Scheduler\Task\AbstractTask $task)
     {
         $task->configurations = $submittedData['pxamynewsdesk_configurations'];
+    }
+
+    /**
+     * Select all configuration from DB
+     *
+     * @return array
+     */
+    protected function selectConfigs(): array
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_pxamynewsdesk_domain_model_importconfig')
+            ->select(
+                ['uid', 'title'],
+                'tx_pxamynewsdesk_domain_model_importconfig'
+            )
+            ->fetchAll();
     }
 }
