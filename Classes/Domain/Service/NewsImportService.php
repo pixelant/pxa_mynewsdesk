@@ -6,6 +6,8 @@ namespace Pixelant\PxaMynewsdesk\Domain\Service;
 use GeorgRinger\News\Domain\Model\News;
 use GeorgRinger\News\Domain\Model\Tag;
 use GeorgRinger\News\Domain\Repository\TagRepository;
+use GeorgRinger\News\Service\Transliterator\Transliterator;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Resource\DuplicationBehavior;
 use TYPO3\CMS\Core\Resource\File as CoreFile;
 use TYPO3\CMS\Core\Resource\Folder;
@@ -59,7 +61,40 @@ class NewsImportService extends \GeorgRinger\News\Domain\Service\NewsImportServi
         // Attach tags
         $this->addNewsTags($news, $importItem);
 
+        // Update news slug. Persis so we have UID to update
+        $this->persistenceManager->persistAll();
+        $this->updateSlugField($news);
+
         return $news;
+    }
+
+    /**
+     * Set slug field for news records
+     *
+     * @param News $news
+     */
+    protected function updateSlugField(News $news): void
+    {
+        GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_news_domain_model_news')
+            ->update(
+                'tx_news_domain_model_news',
+                [
+                    'path_segment' => $this->generateSlug($news->getTitle()),
+                ],
+                ['uid' => $news->getUid()]
+            );
+    }
+
+    /**
+     * Generate slug
+     *
+     * @param string $string
+     * @return string
+     */
+    protected function generateSlug(string $string): string
+    {
+        return Transliterator::urlize($string);
     }
 
     /**
